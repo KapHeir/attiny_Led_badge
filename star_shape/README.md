@@ -121,7 +121,7 @@ Typical component list:
 ![Schematic](images/schematic.png)
 
 ### 3D View
-![3D View](images/3d view.png)
+![3D View](images/3d_view.png)
 
 ---
 
