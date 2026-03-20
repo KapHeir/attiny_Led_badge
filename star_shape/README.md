@@ -97,7 +97,7 @@ The badge is built around the **ATtiny85**, which controls the LEDs and reads th
 
 A BOM image is included here:
 
-![BOM Table](images/bom-table.png)
+![BOM Table](Images/bom-table.png)
 
 Typical component list:
 - 1 × ATtiny85
@@ -121,7 +121,7 @@ Typical component list:
 ![Schematic](Images/schematic.png)
 
 ### 3D View
-![3D View](Images/3d_view.png)
+![3D View](Images/3d_View.png)
 
 ---
 
