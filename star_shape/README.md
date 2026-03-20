@@ -344,7 +344,7 @@ It is not just a blinking LED board; it is intended as a compact, polished, and 
 Fabrication files are stored in:
 
 ```text
-gerbers/
+star_shape/Gerber and drill files
 ```
 
 These include:
