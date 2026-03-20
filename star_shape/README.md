@@ -115,13 +115,13 @@ Typical component list:
 ## 7. PCB Images
 
 ### PCB Layout
-![PCB Layout](images/pcb.png)
+![PCB Layout](Images/pcb.png)
 
 ### Schematic
-![Schematic](images/schematic.png)
+![Schematic](Images/schematic.png)
 
 ### 3D View
-![3D View](images/3d_view.png)
+![3D View](Images/3d_view.png)
 
 ---
 
@@ -157,7 +157,7 @@ The board uses a standard **2x3 AVR ISP header** for programming the ATtiny85.
 
 A visual reference is included here:
 
-![ISP Header Pins](images/Header.png)
+![ISP Header Pins](Images/Header.png)
 
 ---
 
