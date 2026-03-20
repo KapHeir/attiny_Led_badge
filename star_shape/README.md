@@ -73,8 +73,7 @@ star_shape/
 │
 └── code/
     └── attiny_led_demo.ino
-
-
+```
 
 ## 5. Hardware Overview
 
@@ -207,3 +206,284 @@ An example firmware file is included in:
 
 ```text
 code/attiny_led_demo.ino
+```
+
+This demo code shows how to:
+- initialize the LED pins
+- read the push button
+- switch animation modes
+- generate several LED patterns
+
+### Example behavior
+- mode 1: sequential blink
+- mode 2: alternating blink
+- mode 3: all LEDs flash
+- mode 4: rotating pattern
+
+---
+
+## 13. Example Code
+
+```cpp
+/*
+  Star Shape ATtiny85 LED Badge Demo
+
+  Example firmware for a decorative LED badge based on the ATtiny85.
+
+  Features:
+  - 5 LEDs
+  - 1 push button
+  - multiple animation modes
+  - button-controlled mode switching
+*/
+
+const int buttonPin = 4;   // PB4
+
+const int led1 = 0;        // PB0
+const int led2 = 1;        // PB1
+const int led3 = 2;        // PB2
+const int led4 = 3;        // PB3
+const int led5 = 0;        // Example placeholder if shared logic is used
+
+int mode = 0;
+bool lastButtonState = HIGH;
+unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 50;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+}
+
+void loop() {
+  handleButton();
+
+  switch (mode) {
+    case 0:
+      sequentialBlink();
+      break;
+    case 1:
+      alternatingBlink();
+      break;
+    case 2:
+      allFlash();
+      break;
+    case 3:
+      rotatingPattern();
+      break;
+    default:
+      mode = 0;
+      break;
+  }
+}
+
+void handleButton() {
+  bool reading = digitalRead(buttonPin);
+
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading == LOW && lastButtonState == HIGH) {
+      mode++;
+      if (mode > 3) {
+        mode = 0;
+      }
+    }
+  }
+
+  lastButtonState = reading;
+}
+
+void sequentialBlink() {
+  digitalWrite(led1, HIGH); delay(100); digitalWrite(led1, LOW);
+  digitalWrite(led2, HIGH); delay(100); digitalWrite(led2, LOW);
+  digitalWrite(led3, HIGH); delay(100); digitalWrite(led3, LOW);
+  digitalWrite(led4, HIGH); delay(100); digitalWrite(led4, LOW);
+}
+
+void alternatingBlink() {
+  digitalWrite(led1, HIGH);
+  digitalWrite(led3, HIGH);
+  delay(150);
+  digitalWrite(led1, LOW);
+  digitalWrite(led3, LOW);
+
+  digitalWrite(led2, HIGH);
+  digitalWrite(led4, HIGH);
+  delay(150);
+  digitalWrite(led2, LOW);
+  digitalWrite(led4, LOW);
+}
+
+void allFlash() {
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, HIGH);
+  delay(200);
+
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  delay(200);
+}
+
+void rotatingPattern() {
+  digitalWrite(led1, HIGH); delay(80); digitalWrite(led1, LOW);
+  digitalWrite(led2, HIGH); delay(80); digitalWrite(led2, LOW);
+  digitalWrite(led3, HIGH); delay(80); digitalWrite(led3, LOW);
+  digitalWrite(led4, HIGH); delay(80); digitalWrite(led4, LOW);
+}
+```
+
+---
+
+## 14. How the Example Code Works
+
+The example firmware performs these steps:
+
+### Startup
+- initialize LED pins as outputs
+- configure the button pin as input with pull-up
+- set the default animation mode
+
+### Main loop
+- check the push button
+- change mode when the button is pressed
+- run the selected animation
+
+### Animation logic
+The firmware cycles through multiple visual modes:
+- sequential blinking
+- alternating groups
+- all LEDs flashing together
+- rotating movement effect
+
+This demonstrates:
+- digital output control
+- button reading
+- mode switching
+- timing-based animation logic
+
+---
+
+## 15. How to Use the Badge
+
+### Basic use
+1. Insert the battery.
+2. Turn on the power switch.
+3. Observe the default animation.
+4. Press the button to change animation modes.
+
+### Educational use
+This board can be used to practice:
+- ATtiny programming
+- LED control logic
+- low-power design basics
+- decorative PCB design
+
+### Demonstration use
+This board can also be used as:
+- a portfolio project
+- a classroom demonstration
+- a beginner embedded systems example
+- a decorative wearable electronics concept
+
+---
+
+## 16. What You Can Modify
+
+This project is intentionally flexible.
+
+You can improve or customize it by changing:
+- LED colors
+- animation timing
+- button behavior
+- board artwork
+- number of modes
+- power optimization strategy
+- LED placement for a different star style
+
+You can also reuse the same design idea for:
+- a heart-shaped badge
+- a logo-shaped PCB
+- a gift badge
+- a themed wearable board
+
+---
+
+## 17. Design Notes
+
+This project was built as a practical exercise in:
+- KiCad schematic capture
+- PCB layout and routing
+- Gerber generation
+- ATtiny85 hardware integration
+- GitHub documentation and project organization
+
+It is not just a blinking LED board; it is intended as a compact, polished, and shareable design project.
+
+---
+
+## 18. Manufacturing Notes
+
+Fabrication files are stored in:
+
+```text
+gerbers/
+```
+
+These include:
+- copper layers
+- mask layers
+- silkscreen layers
+- board outline
+- drill files
+
+Before fabrication, always verify:
+- LED polarity
+- ATtiny85 orientation
+- switch footprint compatibility
+- battery holder footprint compatibility
+- programming header orientation
+
+---
+
+## 19. Recommended Checks Before Assembly
+
+Before ordering or soldering the board, check:
+- ATtiny85 pin orientation
+- LED polarity
+- resistor values
+- push button footprint
+- on/off switch footprint
+- battery holder footprint
+- ISP header orientation
+- solder bridge risk on small pads
+- board outline integrity
+
+---
+
+## 20. Suggested Improvements for Future Revisions
+
+Possible future improvements:
+- lower power firmware
+- PWM fade animations
+- cleaner visual LED symmetry
+- fully optimized badge layout
+- assembly photographs
+- finished hardware photos
+- animated GIF or demo video
+- alternate shape variants
