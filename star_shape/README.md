@@ -181,23 +181,53 @@ This project is designed to run from a **CR2032 coin cell battery**.
 
 ## 11. How to Program the ATtiny85
 
-The ATtiny85 is programmed through the **2x3 ISP header**.
+The ATtiny85 on this board is programmed through the **2x3 AVR ISP header**.
 
-### Required tools
+This project can be programmed using:
+- **Arduino as ISP**
+- **USBasp**
+- other AVR-compatible programmers
 
-You can use one of the following:
-- USBasp
-- Arduino as ISP
-- another AVR-compatible programmer
+The most beginner-friendly method is usually **Arduino as ISP**.
 
-### General programming process
+---
 
-1. Connect the programmer to the 2x3 ISP header.
-2. Make sure the board has power, or that the programmer provides it correctly if supported.
-3. Upload the firmware to the ATtiny85.
-4. Disconnect the programmer.
-5. Turn the board on and test the LED behavior.
+### 11.1 Programming Method Used in This Project
 
+In this project, the ATtiny85 can be programmed using an **Arduino board as an ISP programmer**.
+
+A common setup is:
+- Arduino Uno
+- jumper wires
+- the 2x3 ISP header on the badge PCB
+
+---
+
+### 11.2 ISP Header Pin Functions
+
+The 2x3 programming header on the PCB is connected like this:
+
+- **Pin 1** → RESET
+- **Pin 2** → VCC
+- **Pin 3** → PB1 / MOSI
+- **Pin 4** → PB0 / MISO
+- **Pin 5** → PB2 / SCK
+- **Pin 6** → GND
+
+These are the programming-related lines used by the ATtiny85.
+
+---
+
+### 11.3 Arduino as ISP Connections
+
+If you use an **Arduino Uno as ISP**, connect it to the badge as follows:
+
+- **Arduino D10** → **RESET** (ISP header Pin 1)
+- **Arduino 5V** → **VCC** (ISP header Pin 2)
+- **Arduino D11** → **MOSI / PB1** (ISP header Pin 3)
+- **Arduino D12** → **MISO / PB0** (ISP header Pin 4)
+- **Arduino D13** → **SCK / PB2** (ISP header Pin 5)
+- **Arduino GND** → **GND** (ISP header Pin 6)
 ---
 
 ## 12. Example Firmware
@@ -222,135 +252,7 @@ This demo code shows how to:
 
 ---
 
-## 13. Example Code
-
-```cpp
-/*
-  Star Shape ATtiny85 LED Badge Demo
-
-  Example firmware for a decorative LED badge based on the ATtiny85.
-
-  Features:
-  - 5 LEDs
-  - 1 push button
-  - multiple animation modes
-  - button-controlled mode switching
-*/
-
-const int buttonPin = 4;   // PB4
-
-const int led1 = 0;        // PB0
-const int led2 = 1;        // PB1
-const int led3 = 2;        // PB2
-const int led4 = 3;        // PB3
-const int led5 = 0;        // Example placeholder if shared logic is used
-
-int mode = 0;
-bool lastButtonState = HIGH;
-unsigned long lastDebounceTime = 0;
-const unsigned long debounceDelay = 50;
-
-void setup() {
-  pinMode(buttonPin, INPUT_PULLUP);
-
-  pinMode(led1, OUTPUT);
-  pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
-  pinMode(led4, OUTPUT);
-
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  digitalWrite(led3, LOW);
-  digitalWrite(led4, LOW);
-}
-
-void loop() {
-  handleButton();
-
-  switch (mode) {
-    case 0:
-      sequentialBlink();
-      break;
-    case 1:
-      alternatingBlink();
-      break;
-    case 2:
-      allFlash();
-      break;
-    case 3:
-      rotatingPattern();
-      break;
-    default:
-      mode = 0;
-      break;
-  }
-}
-
-void handleButton() {
-  bool reading = digitalRead(buttonPin);
-
-  if (reading != lastButtonState) {
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (reading == LOW && lastButtonState == HIGH) {
-      mode++;
-      if (mode > 3) {
-        mode = 0;
-      }
-    }
-  }
-
-  lastButtonState = reading;
-}
-
-void sequentialBlink() {
-  digitalWrite(led1, HIGH); delay(100); digitalWrite(led1, LOW);
-  digitalWrite(led2, HIGH); delay(100); digitalWrite(led2, LOW);
-  digitalWrite(led3, HIGH); delay(100); digitalWrite(led3, LOW);
-  digitalWrite(led4, HIGH); delay(100); digitalWrite(led4, LOW);
-}
-
-void alternatingBlink() {
-  digitalWrite(led1, HIGH);
-  digitalWrite(led3, HIGH);
-  delay(150);
-  digitalWrite(led1, LOW);
-  digitalWrite(led3, LOW);
-
-  digitalWrite(led2, HIGH);
-  digitalWrite(led4, HIGH);
-  delay(150);
-  digitalWrite(led2, LOW);
-  digitalWrite(led4, LOW);
-}
-
-void allFlash() {
-  digitalWrite(led1, HIGH);
-  digitalWrite(led2, HIGH);
-  digitalWrite(led3, HIGH);
-  digitalWrite(led4, HIGH);
-  delay(200);
-
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  digitalWrite(led3, LOW);
-  digitalWrite(led4, LOW);
-  delay(200);
-}
-
-void rotatingPattern() {
-  digitalWrite(led1, HIGH); delay(80); digitalWrite(led1, LOW);
-  digitalWrite(led2, HIGH); delay(80); digitalWrite(led2, LOW);
-  digitalWrite(led3, HIGH); delay(80); digitalWrite(led3, LOW);
-  digitalWrite(led4, HIGH); delay(80); digitalWrite(led4, LOW);
-}
-```
-
----
-
-## 14. How the Example Code Works
+## 13. How the Example Code Works
 
 The example firmware performs these steps:
 
@@ -379,7 +281,7 @@ This demonstrates:
 
 ---
 
-## 15. How to Use the Badge
+## 14. How to Use the Badge
 
 ### Basic use
 1. Insert the battery.
@@ -403,7 +305,7 @@ This board can also be used as:
 
 ---
 
-## 16. What You Can Modify
+## 15. What You Can Modify
 
 This project is intentionally flexible.
 
@@ -424,7 +326,7 @@ You can also reuse the same design idea for:
 
 ---
 
-## 17. Design Notes
+## 16. Design Notes
 
 This project was built as a practical exercise in:
 - KiCad schematic capture
@@ -437,7 +339,7 @@ It is not just a blinking LED board; it is intended as a compact, polished, and 
 
 ---
 
-## 18. Manufacturing Notes
+## 17. Manufacturing Notes
 
 Fabrication files are stored in:
 
@@ -461,7 +363,7 @@ Before fabrication, always verify:
 
 ---
 
-## 19. Recommended Checks Before Assembly
+## 18. Recommended Checks Before Assembly
 
 Before ordering or soldering the board, check:
 - ATtiny85 pin orientation
@@ -476,7 +378,7 @@ Before ordering or soldering the board, check:
 
 ---
 
-## 20. Suggested Improvements for Future Revisions
+## 19. Suggested Improvements for Future Revisions
 
 Possible future improvements:
 - lower power firmware
